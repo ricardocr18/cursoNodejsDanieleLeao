@@ -5,10 +5,10 @@ const server = http.createServer((request, response)=> {
         message: "minha primeira resposta"
     }
 
-        response.writeHead(201, {
-            'Content-type': 'application/json'
-        })
-
+    response.statusCode = 201;
+    response.setHeader("Content-type", "aplication/json");
+    response.statusMessage = "Usuário salvo com sucesso"
+        
     response.write(JSON.stringify(result))
     response.end()
 });
