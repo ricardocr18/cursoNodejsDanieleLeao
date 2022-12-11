@@ -1,32 +1,38 @@
 const http = require("http");
 const { randomUUID } = require("crypto"); //Aqui criei uma função para usar na criação de numeros randomicos
 
-
+//GET - Listar todods os usuário
+//PUT - Alterar um usuário
+//Delete - Remover um usuário
 
 let users = []
-const server = http.createServer((request, response)=> {
+const server = http.createServer((request, response) => {
     //cadastro de usuário
 
     const METHOD = request.method;
-    if(METHOD === 'POST'){
+    const URL = request.url
 
-        request.on("data", (data) => {
-            const body = JSON.parse(data);
-            const user = {
-                ...body,
-                id: randomUUID()
-            }
-            users.push(user)
-            return response.end(JSON.stringify(user))
-        })
+    if (URL === "/users") {
+        //POS - Inserir os usuário
+        
+        if (METHOD === 'POST') {
+
+            request.on("data", (data) => {
+                const body = JSON.parse(data);
+                const user = {
+                    ...body,
+                    id: randomUUID()
+                }
+                users.push(user)
+                return response.end(JSON.stringify(user))
+            })
+
+        }
+        if (METHOD === 'GET') {
+            return response.end(JSON.stringify(users))
+        }
 
     }
-
-    //GET - Listar todods os usuário
-    //POS - Inseriri os usuário
-    //PUT - Alterar um usuário
-    //Delete - Remover um usuário
-
 
 
 });
