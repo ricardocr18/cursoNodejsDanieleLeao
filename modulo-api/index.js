@@ -17,7 +17,7 @@ const server = http.createServer((request, response) => {
         if (METHOD === 'POST') {
 
             request.on("data", (data) => {
-                const body = JSON.parse(data);
+                const body = JSON.parse(data);               
                 const user = {
                     ...body,
                     id: randomUUID()
@@ -45,22 +45,31 @@ const server = http.createServer((request, response) => {
                 // identificar qual usuário dentro do array
                 const userIndex = users.findIndex((user) => user.id === id);
 
+                //tratativa de erro, quando não encontramos o usuário para alterar
+                if (userIndex <= -1) {                    
+                    return response.end(
+                        JSON.stringify({
+                            message: "Usuário não encontrado"
+                        })
+                    )
+                }
+
                 //alterar o usuário  (ID permanece)
                 users[userIndex] = {
                     ...body,
                     id,
                 };
 
-                
-            }) 
-            .on("end", () => {
-                //retornar usuário alterado
-                return response.end(
-                    JSON.stringify({
-                        message: "usuário alterado com sucesso!"
-                    })
-                );
+
             })
+                .on("end", () => {
+                    //retornar usuário alterado
+                    return response.end(
+                        JSON.stringify({
+                            message: "usuário alterado com sucesso!"
+                        })
+                    );
+                })
 
         }
 
@@ -70,3 +79,8 @@ const server = http.createServer((request, response) => {
 });
 
 server.listen(3000, () => console.log("Servidor está no AR"))
+
+//caso acorra agum erro dentro do código será tratado aqui
+process.on("uncaughtException", (err) =>
+    console.log(`Erro no servidor ${err}`)
+)
