@@ -1,3 +1,5 @@
+//index com utilização do postman, arquivo foi utilizado antes da instalãção do node e o pacage.json. Aqui não usamos o banco de dado e sim um arry para gravar os nomes
+
 const http = require("http");
 const { randomUUID } = require("crypto"); //Aqui criei uma função para usar na criação de numeros randomicos
 
