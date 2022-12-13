@@ -1,9 +1,22 @@
 const http = require("http");
 const { randomUUID } = require("crypto"); //Aqui criei uma função para usar na criação de numeros randomicos
+const { Client } = require("pg");
+//const { networkInterfaces } = require("os");
 
+const client = new Client({
+    host: 'localhost',
+    user: 'postgres',
+    password: 'Linux@31',
+    database: 'modulo_api_cursos',
+    port: 5432
+})
 
-//PUT - Alterar um usuário
-//Delete - Remover um usuário
+client.connect();
+client.query('SELECT NOW()', (err, res) => {
+    console.log("Sucess", res);
+    client.end()
+})
+
 
 let users = [] //estou salvado o nosso usuário em um array
 const server = http.createServer((request, response) => {
@@ -17,7 +30,7 @@ const server = http.createServer((request, response) => {
         if (METHOD === 'POST') {
 
             request.on("data", (data) => {
-                const body = JSON.parse(data);               
+                const body = JSON.parse(data);
                 const user = {
                     ...body,
                     id: randomUUID()
@@ -46,7 +59,7 @@ const server = http.createServer((request, response) => {
                 const userIndex = users.findIndex((user) => user.id === id);
 
                 //tratativa de erro, quando não encontramos o usuário para alterar
-                if (userIndex <= -1) {                    
+                if (userIndex <= -1) {
                     return response.end(
                         JSON.stringify({
                             message: "Usuário não encontrado"
