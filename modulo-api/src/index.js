@@ -11,9 +11,9 @@ const server = http.createServer((request, response) => {
         //POS - Inserir os usuário        
         if (METHOD === 'POST') {
 
-            request.on("data", (data) => {
+            request.on("data", async (data) => {
                 const body = JSON.parse(data);
-                const result = user.create(body)
+                const result = await user.create(body)
                 return response.end(JSON.stringify(result))
             })
 
@@ -30,12 +30,17 @@ const server = http.createServer((request, response) => {
             const paramSplit = URL.split("/"); //aqui vou dividir a URL que está em postman em / e abaixo só pego a posição 2 do meu array
             const id = paramSplit[2]
 
-            request.on("data", (data) => {
+            request.on("data", async (data) => {
                 //receber as informaçõe que quero alterar do nosso body
                 const body = JSON.parse(data);
 
                 try {
-                    user.update(body, id)
+                    await user.update(body, id)
+                    return response.end(
+                        JSON.stringify({
+                            message: "usuário alterado com sucesso!"
+                        })
+                    );
                 } catch (err) {
                     return response.end(
                         JSON.stringify({
@@ -44,21 +49,9 @@ const server = http.createServer((request, response) => {
                     )
                 }
 
-            })
-                .on("end", () => {
-                    //retornar usuário alterado
-                    return response.end(
-                        JSON.stringify({
-                            message: "usuário alterado com sucesso!"
-                        })
-                    );
-                })
-
+            })                
         }
-
     }
-
-
 });
 
 server.listen(3000, () => console.log("Servidor está no AR"))

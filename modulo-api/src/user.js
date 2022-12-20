@@ -1,16 +1,13 @@
-const { randomUUID } = require("crypto"); //Aqui criei uma função para usar na criação de numeros randomicos
+const UserRepository = require("./user.repository");
 
 class User {
     constructor(){
         this.users = []
+        this.userRepository = new UserRepository()
     }
 
-    create(body){
-        const user = {
-            ...body,
-            id: randomUUID()
-        }
-        this.users.push(user);
+    async create(body){
+        const user = await this.userRepository.create(body)
         return user;
     }
 
@@ -18,22 +15,14 @@ class User {
         return this.users
     }
 
-    update(body, id){
+    async update(body, id){
+        const userExists = await this.usersRepository.findById(id)
 
-         // identificar qual usuário dentro do array
-         const userIndex = this.users.findIndex((user) => user.id === id);
-
-         //tratativa de erro, quando não encontramos o usuário para alterar
-         if (userIndex <= -1) {
-             throw new Error("Usuário não encontrado")
+         if (!userExists) {
+             throw new Error("Usuário não encontrado!")
          }
-
-         //alterar o usuário  (ID permanece)
-         this.users[userIndex] = {
-             ...body,
-             id,
-         };
         
+        await this.userRepository.update(body, id)        
     }
 }
 
