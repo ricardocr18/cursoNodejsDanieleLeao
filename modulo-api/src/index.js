@@ -1,24 +1,6 @@
 const http = require("http");
-const { randomUUID } = require("crypto"); //Aqui criei uma função para usar na criação de numeros randomicos
-const { Client } = require("pg");
-//const { networkInterfaces } = require("os");
+const user = require('./user')
 
-const client = new Client({
-    host: 'localhost',
-    user: 'postgres',
-    password: 'Linux@31',
-    database: 'modulo_api_cursos',
-    port: 5432
-})
-
-client.connect();
-client.query('SELECT NOW()', (err, res) => {
-    console.log("Sucess", res);
-    client.end()
-})
-
-
-let users = [] //estou salvado o nosso usuário em um array
 const server = http.createServer((request, response) => {
     //cadastro de usuário
 
@@ -31,18 +13,15 @@ const server = http.createServer((request, response) => {
 
             request.on("data", (data) => {
                 const body = JSON.parse(data);
-                const user = {
-                    ...body,
-                    id: randomUUID()
-                }
-                users.push(user)
-                return response.end(JSON.stringify(user))
+                const result = user.create(body)
+                return response.end(JSON.stringify(result))
             })
 
         }
         //GET - Listar todods os usuário
         if (METHOD === 'GET') {
-            return response.end(JSON.stringify(users))
+            const result = user.findAll()
+            return response.end(JSON.stringify(result))
         }
 
         //PUT - Alterar um usuário
@@ -55,24 +34,15 @@ const server = http.createServer((request, response) => {
                 //receber as informaçõe que quero alterar do nosso body
                 const body = JSON.parse(data);
 
-                // identificar qual usuário dentro do array
-                const userIndex = users.findIndex((user) => user.id === id);
-
-                //tratativa de erro, quando não encontramos o usuário para alterar
-                if (userIndex <= -1) {
+                try {
+                    user.update(body, id)
+                } catch (err) {
                     return response.end(
                         JSON.stringify({
-                            message: "Usuário não encontrado"
+                            message: err.message,  //aqui estamos pegando a mesagem de erro no arquivo user.js no throw new Error("Usuário não encontrado")
                         })
                     )
                 }
-
-                //alterar o usuário  (ID permanece)
-                users[userIndex] = {
-                    ...body,
-                    id,
-                };
-
 
             })
                 .on("end", () => {
