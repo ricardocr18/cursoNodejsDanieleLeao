@@ -1,4 +1,5 @@
-const UserRepository = require("./user.repository");
+const UserRepository = require("./repositories/user.repository");
+const {creatHmac, createHmac, Hmac } = require("crypto") //usando para cryptografar a senha
 
 class User {
     constructor(){
@@ -22,6 +23,11 @@ class User {
          if (!userExists) {
              throw new Error("Usuário não encontrado!")
          }
+
+         //aqui estou cryptografando a senha
+         const { password } = body;
+         const pwdEncrypt = createHmac("sha256", password).digest("hex");      
+
         
         await this.userRepository.update(body, id)        
     }

@@ -40,8 +40,16 @@ const handler = (request, response) => {
         }
     })
 
-    request.params = objParams //aqui estou jogando o resultado
-    return executeRouter.controller(request, response)
+    request
+        .on("data", (data) => {
+            const body = JSON.parse(data);
+            request.body = body
+        }).on("end", () => {
+            request.params = objParams //aqui estou jogando o resultado
+            return executeRouter.controller(request, response)
+        })
+
+
 }
 
 

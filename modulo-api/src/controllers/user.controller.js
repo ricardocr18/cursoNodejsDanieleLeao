@@ -2,12 +2,11 @@ const user = require("../user")
 
 class UserController {
 
-    post(request, response) {
-        request.on("data", async (data) => {
-            const body = JSON.parse(data);
-            const result = await user.create(body)
-            return response.end(JSON.stringify(result))
-        })
+    async post(request, response) {
+        const { body } = request;
+        const result = await user.create(body)
+        return response.end(JSON.stringify(result))
+
     }
 
     async get(request, response) {
@@ -15,8 +14,8 @@ class UserController {
         return response.end(JSON.stringify(result))
     }
 
-    put(request, response) {
-        
+    async put(request, response) {
+
         /* Aqui era a forma antiga de pegar o numero do id para fazermos a pesquisa, depois que criamos o objeto na linha 29 no arquivo handlerRouter, não foi necessario usar essa formula, usamos a de baixo
 
         const URL = request.url
@@ -26,30 +25,24 @@ class UserController {
 
         */
 
-        const {id} = request.params //Aqui estou fazendo uma desestruturação do meu id
+        const { id } = request.params //Aqui estou fazendo uma desestruturação do meu id
+        const { body } = request
 
-        request.on("data", async (data) => {
-            //receber as informaçõe que quero alterar do nosso body
-            const body = JSON.parse(data);
-
-            try {
-                await user.update(body, id)
-                return response.end(
-                    JSON.stringify({
-                        message: "usuário alterado com sucesso!"
-                    })
-                );
-            } catch (err) {
-                return response.end(
-                    JSON.stringify({
-                        message: err.message,  //aqui estamos pegando a mesagem de erro no arquivo user.js no throw new Error("Usuário não encontrado")
-                    })
-                )
-            }
-
-        })
+        try {
+            await user.update(body, id)
+            return response.end(
+                JSON.stringify({
+                    message: "usuário alterado com sucesso!"
+                })
+            );
+        } catch (err) {
+            return response.end(
+                JSON.stringify({
+                    message: err.message,  //aqui estamos pegando a mesagem de erro no arquivo user.js no throw new Error("Usuário não encontrado")
+                })
+            )
+        }
     }
-
 }
 
 module.exports = { UserController }

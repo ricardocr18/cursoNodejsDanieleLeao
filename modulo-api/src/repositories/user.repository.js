@@ -1,5 +1,5 @@
 //aqui estou
-const {client} = require("./database")
+const {client} = require("../database")
 const { randomUUID } = require("crypto"); //aqui estou criando um numero randomico
 
 
