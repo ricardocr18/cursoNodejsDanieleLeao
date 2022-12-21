@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js"
+    
   },
-  "keywords": [],
-  "author": "",
+  "author": "Ricardo",
   "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^2.0.20"
-  },
   "dependencies": {
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.19",
     "pg": "^8.8.0"
   }
 }

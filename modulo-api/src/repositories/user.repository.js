@@ -1,15 +1,13 @@
-//aqui estou
-const {client} = require("../database")
+const { client } = require("../database");
 const { randomUUID } = require("crypto"); //aqui estou criando um numero randomico
 
 
 class UserRepository {
-
-    constructor(){
-        this.client = client
+    constructor() {
+        this.client = client;
     }
 
-    async create({name, username, email, password}) {
+    async create({ name, username, email, password }) {
         const id = randomUUID()
         await this.client.query(
             "INSERT INTO USERS(ID, NAME, USERNAME, EMAIL, PASSWORD) VALUES($1, $2, $3, $4, $5)",
@@ -24,7 +22,6 @@ class UserRepository {
         return user;
     }
 
-    //aqui faço qua o GET pesquisar todos os dados que estão no banco de dado, mais antes passo no user.js
     async findAll(){
         const {rows} = await this.client.query('SELECT * FROM USERS');
         return rows;
@@ -35,16 +32,15 @@ class UserRepository {
         await this.client.query(query, [name, username, email, password, id]);
     }
 
-    // async findById(id){
-    //     const { rows } = await this.client.query("SELECT * FROM USERS WHERE ID = $1 LIMIT 1", [id]);
+    async findById(id){
+        const { rows } = await this.client.query("SELECT * FROM USERS WHERE ID = $1 LIMIT 1", [id]);
 
-    //     if (rows.length > 0) {
-    //         return rows[0]
-    //     }
+        if (rows.length > 0) {
+            return rows[0]
+        }
         
-    //     return null;
-    // }
-    
+        return null;
+    }
 }
 
-module.exports = UserRepository
+module.exports = UserRepository;
