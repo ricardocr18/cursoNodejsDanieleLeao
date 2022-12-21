@@ -21,9 +21,26 @@ const handler = (request, response) => {
 
     const executeRouter = resultRouter.find((item) => {
         const routeUrlSplit = item.url.split("/").filter(Boolean);
-        return urlSplit.length === routeUrlSplit.length        
+        return urlSplit.length === routeUrlSplit.length
     })
 
+    if (!executeRouter) {
+        response.statusCode = 404
+        return response.end("Not Found")
+    }
+
+    const routerSplitUrl = executeRouter.url.split("/").filter(Boolean);
+
+    //AQui criei um objeto para receber o que vem depois dos : na url
+    const objParams = {}
+    routerSplitUrl.forEach((item, index) => {
+        if (item.startsWith(":")) {
+            const formatField = item.replace(":", ""); //Aqui estou retirando o : e substituindo para "" nada
+            objParams[formatField] = urlSplit[index]  //aqui estou realizando a inclusão do resultado no objeto
+        }
+    })
+
+    request.params = objParams //aqui estou jogando o resultado
     return executeRouter.controller(request, response)
 }
 

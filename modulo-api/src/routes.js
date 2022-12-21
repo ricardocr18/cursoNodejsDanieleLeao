@@ -14,7 +14,7 @@ const router = [
         controller: userController.post,
     },
     {
-        url:"/users",
+        url:"/users/:id",
         method: "put",
         controller: userController.put,
     }

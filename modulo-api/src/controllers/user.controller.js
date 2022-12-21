@@ -16,10 +16,17 @@ class UserController {
     }
 
     put(request, response) {
+        
+        /* Aqui era a forma antiga de pegar o numero do id para fazermos a pesquisa, depois que criamos o objeto na linha 29 no arquivo handlerRouter, não foi necessario usar essa formula, usamos a de baixo
+
         const URL = request.url
         //capturar o ID do usuário para podermos efetuar a alteração
         const paramSplit = URL.split("/"); //aqui vou dividir a URL que está em postman em / e abaixo só pego a posição 2 do meu array
         const id = paramSplit[2]
+
+        */
+
+        const {id} = request.params //Aqui estou fazendo uma desestruturação do meu id
 
         request.on("data", async (data) => {
             //receber as informaçõe que quero alterar do nosso body
