@@ -24,6 +24,7 @@ class UserRepository {
         return user;
     }
 
+    //aqui faço qua o GET pesquisar todos os dados que estão no banco de dado, mais antes passo no user.js
     async findAll(){
         const {rows} = await this.client.query('SELECT * FROM USERS');
         return rows;

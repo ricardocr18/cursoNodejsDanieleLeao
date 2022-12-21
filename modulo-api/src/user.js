@@ -11,8 +11,9 @@ class User {
         return user;
     }
 
-    findAll(){
-        return this.users
+    
+    async findAll(){
+        return this.userRepository.findAll(); //aqui estou usando o findAll do arquivo user.repository para fazer a pesquisa no banco de dados do postgree
     }
 
     async update(body, id){
